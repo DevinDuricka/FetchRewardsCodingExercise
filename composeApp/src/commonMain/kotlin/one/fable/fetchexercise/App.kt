@@ -15,10 +15,19 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import fetchrewardscodingexercise.composeapp.generated.resources.Res
 import fetchrewardscodingexercise.composeapp.generated.resources.compose_multiplatform
+import kotlinx.coroutines.launch
+import one.fable.fetchexercise.repository.network.FetchHiringApi
 
 @Composable
 @Preview
 fun App() {
+    val scope = rememberCoroutineScope()
+    scope.launch {
+        FetchHiringApi().getAllHiringItems().forEach {
+            println(it)
+        }
+    }
+
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
