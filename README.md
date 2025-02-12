@@ -1,4 +1,4 @@
-#Fetch Rewards Coding Exercise
+# Fetch Rewards Coding Exercise
 
 > This is a coding exercise I did for the Fetch Rewards interview process (see https://fetch-hiring.s3.amazonaws.com/mobile.html). It highlights fetching data from an endpoint, storing results locally, and presenting the data with some filtering applied and using Jetpack Compose. 
 
