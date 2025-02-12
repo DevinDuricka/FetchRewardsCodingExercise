@@ -4,6 +4,7 @@ import androidx.room.ConstructedBy
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
@@ -32,4 +33,19 @@ interface HiringItemDao {
 
     @Query("SELECT * FROM HiringItem")
     fun getAllAsFlow(): Flow<List<HiringItem>>
+
+    @Query("SELECT * FROM HiringItem")
+    fun getAll(): List<HiringItem>
+
+    @Query("SELECT * FROM HiringItem WHERE id = :id")
+    suspend fun getItemById(id: Int): HiringItem?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(items: List<HiringItem>)
+
+    @Query("DELETE FROM HiringItem WHERE id IN (:ids)")
+    suspend fun deleteByIds(ids: List<Int>)
+
+    @Query("SELECT id FROM HiringItem")
+    suspend fun getAllIds(): List<Int>
 }
