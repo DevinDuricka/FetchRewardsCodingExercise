@@ -10,37 +10,35 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import fetchrewardscodingexercise.composeapp.generated.resources.Res
 import fetchrewardscodingexercise.composeapp.generated.resources.compose_multiplatform
 import kotlinx.coroutines.launch
+import one.fable.fetchexercise.navigation.SetupNavGraph
+import one.fable.fetchexercise.repository.HiringRepository
 import one.fable.fetchexercise.repository.network.FetchHiringApi
+import org.koin.compose.KoinContext
+import org.koin.core.component.get
 
 @Composable
 @Preview
 fun App() {
-    val scope = rememberCoroutineScope()
-    scope.launch {
-        FetchHiringApi().getAllHiringItems().forEach {
-            println(it)
-        }
-    }
+//    val scope = rememberCoroutineScope()
+//
+//    //val repository = HiringRepository by get()
+//    scope.launch {
+//        FetchHiringApi().getAllHiringItems().forEach {
+//            println(it)
+//        }
+//    }
 
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
+        KoinContext {
+            val navController = rememberNavController()
+            SetupNavGraph(navHostController = navController)
         }
     }
 }

@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.android)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.koin.android)
         }
         commonMain {
             kotlin.srcDir("build/generated/ksp/metadata")
@@ -57,7 +58,12 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
                 implementation(libs.room.runtime)
+                implementation(libs.sqlite.bundled)
+                implementation(libs.navigation.compose)
+                implementation(libs.viewmodel.compose)
             }
         }
         iosMain.dependencies {
@@ -99,7 +105,7 @@ room {
 
 dependencies {
     ksp(libs.room.compiler)
-    add("kspCommonMainMetadata", libs.room.compiler)
+    //add("kspCommonMainMetadata", libs.room.compiler)
     debugImplementation(compose.uiTooling)
 }
 

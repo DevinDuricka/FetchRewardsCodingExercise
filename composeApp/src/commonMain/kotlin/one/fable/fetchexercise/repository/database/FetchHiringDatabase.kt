@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import one.fable.fetchexercise.repository.network.HiringItem
+import kotlinx.coroutines.flow.Flow
 
 @Database(entities = [HiringItem::class], version = 1)
 @ConstructedBy(FetchHiringDatabaseConstructor::class)
@@ -29,6 +30,6 @@ interface HiringItemDao {
     @Query("SELECT count(*) FROM HiringItem")
     suspend fun count(): Int
 
-//    @Query("SELECT * FROM HiringItem")
-//    fun getAllAsFlow(): Flow<List<HiringItem>>
+    @Query("SELECT * FROM HiringItem")
+    fun getAllAsFlow(): Flow<List<HiringItem>>
 }
