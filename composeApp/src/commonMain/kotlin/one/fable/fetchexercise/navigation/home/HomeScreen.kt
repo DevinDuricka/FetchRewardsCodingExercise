@@ -23,13 +23,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen() { //navigateToDetails: () -> Unit //if you wanted navigation
     val viewModel = koinViewModel<HomeViewModel>()
-    val hiringItems by viewModel.hiringItems.collectAsState(initial = emptyList())
-    val isLoading by viewModel.isLoading.collectAsState()
+    val homeState by viewModel.homeState.collectAsStateWithLifecycle()
+    //val hiringItems by viewModel.hiringItems.collectAsState(initial = emptyList())
+    //val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -53,46 +55,54 @@ fun HomeScreen() { //navigateToDetails: () -> Unit //if you wanted navigation
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (isLoading) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                )
-            }
+            when (val state = homeState) {
+                is HomeState.isError -> {
+                    Text(text = state.message)
+                }
+                is HomeState.isFinished -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        val groupedItems = state.items.groupBy { it.listId }
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                val groupedItems = hiringItems.groupBy { it.listId }
+                        groupedItems.forEach { (listId, items) ->
+                            item {
+                                Text(
+                                    text = "List ID: $listId",
+                                    style = MaterialTheme.typography.h6,
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                )
+                            }
 
-                groupedItems.forEach { (listId, items) ->
-                    item {
-                        Text(
-                            text = "List ID: $listId",
-                            style = MaterialTheme.typography.h6,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-                    }
-
-                    items(
-                        items = items,
-                    ) { item ->
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            elevation = 4.dp
-                        ) {
-                            Text(
-                                text = item.name ?: "",
-                                modifier = Modifier.padding(16.dp),
-                                style = MaterialTheme.typography.body1
-                            )
+                            items(
+                                items = items,
+                            ) { item ->
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    elevation = 4.dp
+                                ) {
+                                    Text(
+                                        text = item.name ?: "",
+                                        modifier = Modifier.padding(16.dp),
+                                        style = MaterialTheme.typography.body1
+                                    )
+                                }
+                            }
                         }
                     }
                 }
+                is HomeState.isLoading -> {
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                    )
+                }
             }
+
+
         }
 
     }
